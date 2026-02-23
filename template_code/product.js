@@ -14,12 +14,12 @@ async function fetchCoffees() {
         // STEP 1: Fetch data from the API
         // API URL: 'https://api.sampleapis.com/coffee/hot'
         // HINT: const response = await fetch('URL_HERE');
-        const response = // YOUR CODE HERE
+        const response = await fetch('coffee.json');
         
         // STEP 2: Convert response to JSON
         // HINT: const data = await response.json();
-        const data = // YOUR CODE HERE
-        
+        const data = await response.json();
+        console.log(data);
         // ==========================================
         // TODO #2: TRANSFORM THE DATA
         // ==========================================
@@ -32,14 +32,16 @@ async function fetchCoffees() {
         // Use .map() to transform each coffee object:
         // HINT: allCoffees = data.map(coffee => ({ ... }));
         
-        allCoffees = data.map(coffee => ({
-            id: coffee.id,
-            name: // YOUR CODE HERE (use coffee.title)
-            description: // YOUR CODE HERE
-            category: getCoffeeCategory(coffee.title, coffee.ingredients),
-            ingredients: // YOUR CODE HERE
-            image_url: // YOUR CODE HERE (use coffee.image)
-        }));
+        const coffeeArray = data.hot; // or data.iced
+
+allCoffees = coffeeArray.map(coffee => ({
+    id: coffee.id,
+    name: coffee.title,
+    description: coffee.description,
+    category: getCoffeeCategory(coffee.title, coffee.ingredients),
+    ingredients: coffee.ingredients,
+    image_url: coffee.image
+}));
         
         // Display all coffees when page loads
         displayCoffees(allCoffees);
@@ -64,12 +66,12 @@ function getCoffeeCategory(title, ingredients) {
     
     // Check if it contains 'espresso'
     // HINT: if (ingredientsStr.includes('espresso')) { return 'espresso'; }
-    if (/* YOUR CODE HERE */) {
+    if (ingredientsStr.includes('espresso')) {
         return 'espresso';
     }
     
     // Check if it contains 'coffee'
-    if (/* YOUR CODE HERE */) {
+    if (ingredientsStr.includes('coffee')) {
         return 'coffee';
     }
     
@@ -90,12 +92,12 @@ function displayCoffees(coffeesToShow) {
         productCard.className = 'product-card';
         
         productCard.innerHTML = `
-            <img src="YOUR CODE HERE CALL THE COFFEE IMAGE" alt="${coffee.name}">
-            <h3> YOUR CODE HERE CALL THE COFFEE NAME </h3>
+            <img src="${coffee.image_url}" alt="${coffee.name}">
+            <h3>${coffee.name}</h3>
             <div class="product-info">
                 <div class="description-section">
                     <p class="section-label">Description:</p>
-                    <p class="section-content"> YOUR CODE HERE ADD THE DESCRIPTION INFORMATION </p>
+                    <p class="section-content">${coffee.description}</p>
                 </div>
                 <div class="ingredients-section">
                     <p class="section-label">Ingredients:</p>
@@ -107,6 +109,7 @@ function displayCoffees(coffeesToShow) {
         // After formatting and adding the content to the card push it to the grid
         // HINT: productGrid.appendChild(productCard);
         // YOUR CODE HERE
+        productGrid.appendChild(productCard);
     });
 }
 
@@ -118,10 +121,11 @@ function filterByCategory(category) {
         // Display all coffees
         // HINT: displayCoffees(allCoffees);
         // YOUR CODE HERE
+        displayCoffees(allCoffees);
     } else {
         // Filter coffees where category matches
         // HINT: const filtered = allCoffees.filter(c => c.category === category);
-        const filtered = // YOUR CODE HERE
+        const filtered = allCoffees.filter(coffee => coffee.category === category);
         displayCoffees(filtered);
     }
 }
